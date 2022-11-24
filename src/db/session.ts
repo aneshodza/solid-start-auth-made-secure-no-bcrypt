@@ -16,11 +16,11 @@ export async function register({ username, password }: LoginForm) {
 export async function login({ username, password }: LoginForm) {
   const user = await db.user.findUnique({ where: { username } });
   if (!user) return null;
-  const encryptedInput = sha256(password
+  const digestedInput = sha256(password
                               + user.salt
                               + pepper)
                                 .toString();
-  const isCorrectPassword = encryptedInput === user.encrypted_password;
+  const isCorrectPassword = digestedInput === user.digested_password;
   if (!isCorrectPassword) return null;
   return user;
 }
